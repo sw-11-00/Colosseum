@@ -1,0 +1,12 @@
+syntax = "proto3";
+package colosseum.colosseum;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "Colosseum/x/colosseum/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

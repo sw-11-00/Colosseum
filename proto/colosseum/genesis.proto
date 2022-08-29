@@ -1,0 +1,14 @@
+syntax = "proto3";
+package colosseum.colosseum;
+
+import "gogoproto/gogo.proto";
+import "colosseum/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "Colosseum/x/colosseum/types";
+
+// GenesisState defines the colosseum module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
