@@ -9,10 +9,52 @@
  * ---------------------------------------------------------------
  */
 
+export interface ColosseumCoinSymbol {
+  /** @format uint64 */
+  id?: string;
+  symbol?: string;
+
+  /** @format int32 */
+  createdAt?: number;
+
+  /** @format int32 */
+  updatedAt?: number;
+  isDeleted?: boolean;
+  creator?: string;
+}
+
+export interface ColosseumMsgCreateCoinSymbolResponse {
+  /** @format uint64 */
+  id?: string;
+}
+
+export type ColosseumMsgDeleteCoinSymbolResponse = object;
+
+export type ColosseumMsgUpdateCoinSymbolResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */
 export type ColosseumParams = object;
+
+export interface ColosseumQueryAllCoinSymbolResponse {
+  CoinSymbol?: ColosseumCoinSymbol[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface ColosseumQueryGetCoinSymbolResponse {
+  CoinSymbol?: ColosseumCoinSymbol;
+}
 
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
@@ -31,6 +73,62 @@ export interface RpcStatus {
   code?: number;
   message?: string;
   details?: ProtobufAny[];
+}
+
+/**
+* message SomeRequest {
+         Foo some_parameter = 1;
+         PageRequest pagination = 2;
+ }
+*/
+export interface V1Beta1PageRequest {
+  /**
+   * key is a value returned in PageResponse.next_key to begin
+   * querying the next page most efficiently. Only one of offset or key
+   * should be set.
+   * @format byte
+   */
+  key?: string;
+
+  /**
+   * offset is a numeric offset that can be used when key is unavailable.
+   * It is less efficient than using key. Only one of offset or key should
+   * be set.
+   * @format uint64
+   */
+  offset?: string;
+
+  /**
+   * limit is the total number of results to be returned in the result page.
+   * If left empty it will default to a value to be set by each app.
+   * @format uint64
+   */
+  limit?: string;
+
+  /**
+   * count_total is set to true  to indicate that the result set should include
+   * a count of the total number of items available for pagination in UIs.
+   * count_total is only respected when offset is used. It is ignored when key
+   * is set.
+   */
+  count_total?: boolean;
+}
+
+/**
+* PageResponse is to be embedded in gRPC response messages where the
+corresponding request message has used PageRequest.
+
+ message SomeResponse {
+         repeated Bar results = 1;
+         PageResponse page = 2;
+ }
+*/
+export interface V1Beta1PageResponse {
+  /** @format byte */
+  next_key?: string;
+
+  /** @format uint64 */
+  total?: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -225,10 +323,51 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title colosseum/genesis.proto
+ * @title colosseum/coin_symbol.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryCoinSymbolAll
+   * @summary Queries a list of CoinSymbol items.
+   * @request GET:/Colosseum/colosseum/coin_symbol
+   */
+  queryCoinSymbolAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<ColosseumQueryAllCoinSymbolResponse, RpcStatus>({
+      path: `/Colosseum/colosseum/coin_symbol`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryCoinSymbol
+   * @summary Queries a CoinSymbol by id.
+   * @request GET:/Colosseum/colosseum/coin_symbol/{id}
+   */
+  queryCoinSymbol = (id: string, params: RequestParams = {}) =>
+    this.request<ColosseumQueryGetCoinSymbolResponse, RpcStatus>({
+      path: `/Colosseum/colosseum/coin_symbol/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

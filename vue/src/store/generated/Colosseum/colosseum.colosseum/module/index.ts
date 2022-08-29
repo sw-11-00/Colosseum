@@ -4,9 +4,15 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgCreateCoinSymbol } from "./types/colosseum/tx";
+import { MsgUpdateCoinSymbol } from "./types/colosseum/tx";
+import { MsgDeleteCoinSymbol } from "./types/colosseum/tx";
 
 
 const types = [
+  ["/colosseum.colosseum.MsgCreateCoinSymbol", MsgCreateCoinSymbol],
+  ["/colosseum.colosseum.MsgUpdateCoinSymbol", MsgUpdateCoinSymbol],
+  ["/colosseum.colosseum.MsgDeleteCoinSymbol", MsgDeleteCoinSymbol],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -39,6 +45,9 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgCreateCoinSymbol: (data: MsgCreateCoinSymbol): EncodeObject => ({ typeUrl: "/colosseum.colosseum.MsgCreateCoinSymbol", value: MsgCreateCoinSymbol.fromPartial( data ) }),
+    msgUpdateCoinSymbol: (data: MsgUpdateCoinSymbol): EncodeObject => ({ typeUrl: "/colosseum.colosseum.MsgUpdateCoinSymbol", value: MsgUpdateCoinSymbol.fromPartial( data ) }),
+    msgDeleteCoinSymbol: (data: MsgDeleteCoinSymbol): EncodeObject => ({ typeUrl: "/colosseum.colosseum.MsgDeleteCoinSymbol", value: MsgDeleteCoinSymbol.fromPartial( data ) }),
     
   };
 };

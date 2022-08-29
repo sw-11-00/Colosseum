@@ -24,7 +24,19 @@ var (
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgCreateCoinSymbol = "op_weight_msg_create_coin_symbol"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateCoinSymbol int = 100
+
+	opWeightMsgDeleteCoinSymbol = "op_weight_msg_delete_coin_symbol"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteCoinSymbol int = 100
+
+	opWeightMsgUpdateCoinSymbol = "op_weight_msg_update_coin_symbol"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateCoinSymbol int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -57,6 +69,39 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgCreateCoinSymbol int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateCoinSymbol, &weightMsgCreateCoinSymbol, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateCoinSymbol = defaultWeightMsgCreateCoinSymbol
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateCoinSymbol,
+		colosseumsimulation.SimulateMsgCreateCoinSymbol(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteCoinSymbol int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteCoinSymbol, &weightMsgDeleteCoinSymbol, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteCoinSymbol = defaultWeightMsgDeleteCoinSymbol
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteCoinSymbol,
+		colosseumsimulation.SimulateMsgDeleteCoinSymbol(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateCoinSymbol int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateCoinSymbol, &weightMsgUpdateCoinSymbol, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateCoinSymbol = defaultWeightMsgUpdateCoinSymbol
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateCoinSymbol,
+		colosseumsimulation.SimulateMsgUpdateCoinSymbol(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 

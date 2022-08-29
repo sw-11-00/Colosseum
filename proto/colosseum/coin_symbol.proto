@@ -1,0 +1,13 @@
+syntax = "proto3";
+package colosseum.colosseum;
+
+option go_package = "Colosseum/x/colosseum/types";
+
+message CoinSymbol {
+  uint64 id = 1;
+  string symbol = 2;
+  int32 createdAt = 3;
+  int32 updatedAt = 4;
+  bool isDeleted = 5;
+  string creator = 6;
+}

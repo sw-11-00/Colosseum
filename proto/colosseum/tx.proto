@@ -7,7 +7,37 @@ option go_package = "Colosseum/x/colosseum/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc CreateCoinSymbol(MsgCreateCoinSymbol) returns (MsgCreateCoinSymbolResponse);
+  rpc DeleteCoinSymbol(MsgDeleteCoinSymbol) returns (MsgDeleteCoinSymbolResponse);
+  rpc UpdateCoinSymbol(MsgUpdateCoinSymbol) returns (MsgUpdateCoinSymbolResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateCoinSymbol {
+  string creator = 1;
+  string symbol = 2;
+  uint64 id = 3;
+}
+
+message MsgCreateCoinSymbolResponse {
+  uint64 id = 1;
+}
+
+message MsgDeleteCoinSymbol {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgDeleteCoinSymbolResponse {
+}
+
+message MsgUpdateCoinSymbol {
+  string creator = 1;
+  uint64 id = 2;
+  string symbol = 3;
+}
+
+message MsgUpdateCoinSymbolResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
